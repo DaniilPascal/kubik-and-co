@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Кубик &amp; Ко — магазин настольных игр</title>
+  <meta name="description" content="Интернет-магазин настольных игр «Кубик & Ко». Семейные стратегии, вечеринки и классика для компании.">
+  <link rel="stylesheet" href="Style.css">
+  <link rel="icon" href="images/logo.jpg" type="image/jpeg">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="index.html">
+        <img src="images/logo.jpg" alt="Логотип Кубик и Ко">
+        <span class="logo-text">Кубик <span>&amp;</span> Ко</span>
+      </a>
+      <nav class="nav" aria-label="Основное меню">
+        <a class="active" href="index.html">Главная</a>
+        <a href="product.html">Каталог</a>
+        <a href="contacts.html">Контакты</a>
+        <a href="db.html">БД</a>
+      </nav>
+      <div class="auth-slot" id="auth-slot"></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">Вариант 28 · Настольные игры</p>
+          <h1>Собери стол — <em>собери компанию</em></h1>
+          <p class="hero-lead">
+            «Кубик &amp; Ко» — магазин настольных игр для семейных вечеров,
+            клубов и дружеских посиделок. Подберём игру под настроение и число игроков.
+          </p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="product.html">Смотреть игру недели</a>
+            <button type="button" class="btn btn-ghost" data-open-auth="register">Создать аккаунт</button>
+          </div>
+        </div>
+
+        <div class="collage" aria-label="Витрина игр">
+          <img class="img-1" src="images/game1.jpg" alt="Настольная игра на столе">
+          <img class="img-2" src="images/game2.jpg" alt="Игровой вечер">
+          <img class="img-3" src="images/game3.jpg" alt="Фишки и кубики">
+          <img class="img-4" src="images/game4.jpg" alt="Коробка с игрой">
+          <img class="img-5" src="images/game5.jpg" alt="Карты и миплы">
+          <img class="img-6" src="images/game6.jpg" alt="Игровое поле">
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head" data-reveal>
+          <h2>Популярные игры</h2>
+          <p>Подборка для разных компаний — от спокойных семейных партий до весёлых вечеринок.</p>
+        </div>
+        <div class="catalog">
+          <article class="game-card" data-reveal>
+            <img src="images/game4.jpg" alt="Каркассон">
+            <div class="game-card-body">
+              <h3>Каркассон</h3>
+              <p class="game-meta">2–5 игроков · 35–45 мин · 7+</p>
+              <p class="price">2 490 ₽</p>
+            </div>
+          </article>
+          <article class="game-card" data-reveal>
+            <img src="images/game3.jpg" alt="Тикет ту Райд">
+            <div class="game-card-body">
+              <h3>Ticket to Ride</h3>
+              <p class="game-meta">2–5 игроков · 45–60 мин · 8+</p>
+              <p class="price">3 290 ₽</p>
+            </div>
+          </article>
+          <article class="game-card" data-reveal>
+            <img src="images/game6.jpg" alt="Имаджинариум">
+            <div class="game-card-body">
+              <h3>Имаджинариум</h3>
+              <p class="game-meta">4–7 игроков · 30–40 мин · 12+</p>
+              <p class="price">1 890 ₽</p>
+            </div>
+          </article>
+        </div>
+        <p style="margin-top: 1.5rem;" data-reveal>
+          <a class="btn btn-primary" href="product.html">Купить «Каркассон»</a>
+        </p>
+      </div>
+    </section>
+
+    <section class="about-band">
+      <div class="container about-inner" data-reveal>
+        <div>
+          <h2>Игры с полки — сразу на стол</h2>
+          <p>
+            Войдите в аккаунт, оформите заказ онлайн и заберите игру в шоуруме
+            или закажите доставку. На странице контактов — живая карта и погода у магазина.
+          </p>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <strong>420+</strong>
+            <span>наименований в каталоге</span>
+          </div>
+          <div class="stat">
+            <strong>28</strong>
+            <span>игровых столов в клубе</span>
+          </div>
+          <div class="stat">
+            <strong>7</strong>
+            <span>лет на рынке настолок</span>
+          </div>
+          <div class="stat">
+            <strong>4.9</strong>
+            <span>средняя оценка гостей</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© 2026 Кубик &amp; Ко · Вариант 28 · ПР №2</p>
+      <p><a href="contacts.html">ул. Игровая, 28 · +7 (812) 555-28-28</a></p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

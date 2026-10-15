@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Каркассон — Кубик &amp; Ко</title>
+  <meta name="description" content="Настольная игра Каркассон: описание, состав коробки, характеристики и цена.">
+  <link rel="stylesheet" href="Style.css">
+  <link rel="icon" href="images/logo.jpg" type="image/jpeg">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="index.html">
+        <img src="images/logo.jpg" alt="Логотип Кубик и Ко">
+        <span class="logo-text">Кубик <span>&amp;</span> Ко</span>
+      </a>
+      <nav class="nav" aria-label="Основное меню">
+        <a href="index.html">Главная</a>
+        <a class="active" href="product.html">Каталог</a>
+        <a href="contacts.html">Контакты</a>
+        <a href="db.html">БД</a>
+      </nav>
+      <div class="auth-slot" id="auth-slot"></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="breadcrumb">
+          <a href="index.html">Главная</a> · Каталог · Каркассон
+        </p>
+      </div>
+    </section>
+
+    <section class="container product-layout">
+      <div class="product-gallery" data-reveal>
+        <img src="images/product-main.jpg" alt="Коробка и поле игры Каркассон">
+      </div>
+
+      <div class="product-info" data-reveal>
+        <span class="badge">Игра недели</span>
+        <h1>Каркассон: Средневековье</h1>
+        <p class="product-desc">
+          Классическая семейная стратегия, в которой вы строите средневековый ландшафт из тайлов:
+          города, дороги, монастыри и поля. Лёгкие правила, глубокий тактический выбор —
+          идеальный старт для компании любого уровня.
+        </p>
+        <p class="product-price">2 490 ₽</p>
+
+        <dl class="specs">
+          <div class="spec">
+            <dt>Игроки</dt>
+            <dd>2–5 человек</dd>
+          </div>
+          <div class="spec">
+            <dt>Время партии</dt>
+            <dd>35–45 минут</dd>
+          </div>
+          <div class="spec">
+            <dt>Возраст</dt>
+            <dd>от 7 лет</dd>
+          </div>
+          <div class="spec">
+            <dt>Жанр</dt>
+            <dd>Тайл-лейинг</dd>
+          </div>
+          <div class="spec">
+            <dt>Сложность</dt>
+            <dd>Лёгкая</dd>
+          </div>
+          <div class="spec">
+            <dt>Издатель</dt>
+            <dd>Hobby World</dd>
+          </div>
+        </dl>
+
+        <div class="composition">
+          <h2>Состав коробки</h2>
+          <ul>
+            <li>72 ландшафтных тайла (города, дороги, монастыри, поля)</li>
+            <li>40 деревянных миплов 5 цветов</li>
+            <li>Поле подсчёта очков</li>
+            <li>Правила игры на русском языке</li>
+            <li>Краткий справочник для быстрого старта</li>
+          </ul>
+        </div>
+
+        <!-- Форма покупки (2-я динамическая форма) -->
+        <div class="order-panel" id="order-panel">
+          <h2>Оформить заказ</h2>
+          <p class="hint">Войдите в аккаунт, укажите контакты и способ получения.</p>
+
+          <form id="form-order" class="order-form" data-price="2490" data-product="Каркассон: Средневековье" novalidate>
+            <label>Имя получателя
+              <input type="text" name="customer" required minlength="2" placeholder="Иван Иванов" autocomplete="name">
+            </label>
+            <label>Телефон
+              <input type="tel" name="phone" required placeholder="+7 (9XX) XXX-XX-XX" autocomplete="tel">
+            </label>
+            <label>Способ получения
+              <select name="delivery" required>
+                <option value="pickup">Самовывоз из магазина</option>
+                <option value="courier">Курьер по городу</option>
+                <option value="post">СДЭК / Почта</option>
+              </select>
+            </label>
+
+            <div class="qty-row">
+              <span>Количество:</span>
+              <button type="button" class="qty-btn" data-qty="-1" aria-label="Меньше">−</button>
+              <input type="number" name="qty" value="1" min="1" max="10">
+              <button type="button" class="qty-btn" data-qty="1" aria-label="Больше">+</button>
+            </div>
+
+            <div class="order-total-row">
+              <span>Итого</span>
+              <span id="order-total">2 490 ₽</span>
+            </div>
+
+            <p class="form-error" hidden></p>
+            <button type="submit" class="btn btn-primary btn-block">Отправить заказ</button>
+          </form>
+
+          <div id="order-success" class="order-success" hidden></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© 2026 Кубик &amp; Ко · Вариант 28 · ПР №2</p>
+      <p><a href="contacts.html">ул. Игровая, 28 · +7 (812) 555-28-28</a></p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

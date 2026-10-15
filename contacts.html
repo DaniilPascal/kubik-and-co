@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Контакты — Кубик &amp; Ко</title>
+  <meta name="description" content="Адрес, телефон и режим работы магазина настольных игр «Кубик & Ко».">
+  <link rel="stylesheet" href="Style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="icon" href="images/logo.jpg" type="image/jpeg">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="index.html">
+        <img src="images/logo.jpg" alt="Логотип Кубик и Ко">
+        <span class="logo-text">Кубик <span>&amp;</span> Ко</span>
+      </a>
+      <nav class="nav" aria-label="Основное меню">
+        <a href="index.html">Главная</a>
+        <a href="product.html">Каталог</a>
+        <a class="active" href="contacts.html">Контакты</a>
+        <a href="db.html">БД</a>
+      </nav>
+      <div class="auth-slot" id="auth-slot"></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="breadcrumb">
+          <a href="index.html">Главная</a> · Контакты
+        </p>
+        <h1>Как нас найти</h1>
+      </div>
+    </section>
+
+    <section class="container contacts-grid">
+      <div class="contact-card" data-reveal>
+        <h2>Магазин и игротека</h2>
+        <p class="slogan">«Собери стол — собери компанию»</p>
+        <p style="color: var(--muted); margin-bottom: 1rem;">
+          Приходите за новой игрой или останьтесь на партию за одним из столов клуба.
+          Поможем подобрать набор под возраст, жанр и число игроков.
+        </p>
+        <ul class="contact-list">
+          <li>
+            <span class="label">Адрес</span>
+            <span>г. Санкт-Петербург, ул. Игровая, д. 28</span>
+          </li>
+          <li>
+            <span class="label">Телефон</span>
+            <span><a href="tel:+78125552828">+7 (812) 555-28-28</a></span>
+          </li>
+          <li>
+            <span class="label">Email</span>
+            <span><a href="mailto:hello@kubik-and-co.ru">hello@kubik-and-co.ru</a></span>
+          </li>
+          <li>
+            <span class="label">Режим</span>
+            <span>Ежедневно с 11:00 до 21:00</span>
+          </li>
+          <li>
+            <span class="label">Метро</span>
+            <span>5 минут от ст. «Василеостровская»</span>
+          </li>
+        </ul>
+        <div class="cta-row" style="margin-top: 1.5rem;">
+          <a class="btn btn-primary" href="tel:+78125552828">Позвонить</a>
+          <button type="button" class="btn btn-ghost" data-open-auth="login">Войти</button>
+        </div>
+      </div>
+
+      <div data-reveal>
+        <!-- API: интерактивная карта OpenStreetMap через Leaflet -->
+        <div id="store-map" role="region" aria-label="Карта магазина"></div>
+        <p id="store-weather" class="store-weather" hidden></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© 2026 Кубик &amp; Ко · Вариант 28 · ПР №2</p>
+      <p>Слоган: Собери стол — собери компанию</p>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="js/app.js"></script>
+  <script src="js/map.js"></script>
+</body>
+</html>

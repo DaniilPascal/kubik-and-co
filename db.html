@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>База данных — Кубик &amp; Ко (ПР №3)</title>
+  <link rel="stylesheet" href="Style.css">
+  <link rel="icon" href="images/logo.jpg" type="image/jpeg">
+  <style>
+    .db-grid { display: grid; gap: 1.5rem; padding-bottom: 3rem; }
+    .db-panel { background: var(--white); border: 1px solid var(--line); padding: 1.25rem; overflow-x: auto; }
+    .db-panel h2 { font-family: "Syne", sans-serif; font-size: 1.2rem; margin-bottom: 0.75rem; }
+    .db-meta { color: var(--muted); font-size: 0.9rem; margin-bottom: 1rem; }
+    table.db-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    table.db-table th, table.db-table td { border: 1px solid var(--line); padding: 0.55rem 0.7rem; text-align: left; }
+    table.db-table th { background: var(--felt); color: var(--white); }
+    table.db-table tr:nth-child(even) { background: var(--paper); }
+    .db-empty { color: var(--muted); font-style: italic; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="index.html">
+        <img src="images/logo.jpg" alt="Логотип Кубик и Ко">
+        <span class="logo-text">Кубик <span>&amp;</span> Ко</span>
+      </a>
+      <nav class="nav" aria-label="Основное меню">
+        <a href="index.html">Главная</a>
+        <a href="product.html">Каталог</a>
+        <a href="contacts.html">Контакты</a>
+        <a class="active" href="db.html">БД</a>
+      </nav>
+      <div class="auth-slot" id="auth-slot"></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <p class="breadcrumb"><a href="index.html">Главная</a> · ПР №3 · База данных</p>
+        <h1>Структура SQLite</h1>
+        <p class="db-meta" id="db-status">Загрузка статуса БД…</p>
+      </div>
+    </section>
+
+    <section class="container db-grid">
+      <div class="db-panel">
+        <h2>Таблица users</h2>
+        <p class="db-meta">Данные форм регистрации и авторизации</p>
+        <div id="users-table"><p class="db-empty">Нет данных</p></div>
+      </div>
+      <div class="db-panel">
+        <h2>Таблица orders</h2>
+        <p class="db-meta">Заказы из формы покупки (связь по user_id)</p>
+        <div id="orders-table"><p class="db-empty">Нет данных</p></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>© 2026 Кубик &amp; Ко · Вариант 28 · ПР №3</p>
+      <p>СУБД: SQLite · 2 таблицы</p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    (async function () {
+      const API = window.location.origin.includes("5000") ? "" : "http://127.0.0.1:5000";
+
+      function tableHTML(headers, rows) {
+        if (!rows.length) return '<p class="db-empty">Пока пусто — зарегистрируйтесь или оформите заказ</p>';
+        let html = "<table class='db-table'><thead><tr>";
+        headers.forEach((h) => { html += "<th>" + h + "</th>"; });
+        html += "</tr></thead><tbody>";
+        rows.forEach((row) => {
+          html += "<tr>";
+          headers.forEach((h) => {
+            const v = row[h] == null ? "" : String(row[h]);
+            html += "<td>" + v.replace(/</g, "&lt;") + "</td>";
+          });
+          html += "</tr>";
+        });
+        html += "</tbody></table>";
+        return html;
+      }
+
+      try {
+        const status = await fetch(API + "/api/db-status").then((r) => r.json());
+        document.getElementById("db-status").textContent =
+          "СУБД: " + status.db + " · таблицы: " + status.tables.join(", ") +
+          " · пользователей: " + status.users + " · заказов: " + status.orders;
+
+        const users = await fetch(API + "/api/users").then((r) => r.json());
+        document.getElementById("users-table").innerHTML = tableHTML(
+          ["id", "name", "email", "created_at"],
+          users.users || []
+        );
+
+        const orders = await fetch(API + "/api/orders").then((r) => r.json());
+        document.getElementById("orders-table").innerHTML = tableHTML(
+          ["id", "user_id", "user_email", "product", "qty", "total", "customer", "phone", "delivery", "created_at"],
+          orders.orders || []
+        );
+      } catch (e) {
+        document.getElementById("db-status").textContent =
+          "Сервер не запущен. В терминале: python3 server.py";
+      }
+    })();
+  </script>
+</body>
+</html>
