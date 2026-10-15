@@ -6,9 +6,9 @@
   "use strict";
 
   const STORAGE_SESSION = "kubik_session";
-  const API = window.location.origin.includes("5000")
-    ? ""
-    : "http://127.0.0.1:5000";
+  // Один origin с сайтом (Render / localhost). localhost только если открыли HTML как файл.
+  const API =
+    window.location.protocol === "file:" ? "http://127.0.0.1:5000" : "";
 
   /* —— API helpers —— */
   async function api(path, options) {

@@ -68,7 +68,8 @@
   <script src="js/app.js"></script>
   <script>
     (async function () {
-      const API = window.location.origin.includes("5000") ? "" : "http://127.0.0.1:5000";
+      const API =
+        window.location.protocol === "file:" ? "http://127.0.0.1:5000" : "";
 
       function tableHTML(headers, rows) {
         if (!rows.length) return '<p class="db-empty">Пока пусто — зарегистрируйтесь или оформите заказ</p>';
