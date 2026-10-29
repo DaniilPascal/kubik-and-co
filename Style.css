@@ -39,6 +39,12 @@ body {
     linear-gradient(180deg, #e8f0eb 0%, var(--paper) 40%, #e4ebe6 100%);
   min-height: 100vh;
   line-height: 1.55;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
 }
 
 img {
@@ -566,6 +572,14 @@ ul {
   grid-template-columns: 1.1fr 0.9fr;
   gap: 2rem;
   padding-bottom: 3.5rem;
+  align-items: stretch;
+}
+
+.map-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  min-height: 100%;
 }
 
 .contact-card {
@@ -635,6 +649,30 @@ ul {
   color: var(--fog);
   padding: 1.5rem 0;
   font-size: 0.9rem;
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+.section-lead {
+  color: var(--muted);
+  margin-top: 0.35rem;
+}
+
+.game-card--link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.btn-sm {
+  display: inline-flex;
+  margin-top: 0.65rem;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.85rem;
+}
+
+.catalog--full {
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
 }
 
 .footer-inner {
@@ -856,15 +894,7 @@ body.modal-open {
 }
 
 .modal__close {
-  position: absolute;
-  top: 0.55rem;
-  right: 0.7rem;
-  border: none;
-  background: transparent;
-  font-size: 1.5rem;
-  line-height: 1;
-  color: var(--muted);
-  cursor: pointer;
+  display: none;
 }
 
 .auth-tabs {
@@ -1031,26 +1061,58 @@ body.modal-open {
 
 .qty-row {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.35rem;
   margin-bottom: 0.85rem;
 }
 
-.qty-row input {
-  width: 64px;
+.qty-label {
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+.qty-controls {
+  display: grid;
+  grid-template-columns: 48px 1fr 48px;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.qty-controls input[type="number"] {
+  width: 100%;
   text-align: center;
   margin-top: 0;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  font: inherit;
+  background: var(--paper);
+  color: var(--ink);
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.qty-controls input[type="number"]::-webkit-outer-spin-button,
+.qty-controls input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .qty-btn {
-  width: 36px;
-  height: 36px;
+  width: 100%;
+  min-height: 46px;
   border: 1px solid var(--line);
   background: var(--paper);
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 700;
   cursor: pointer;
   border-radius: var(--radius);
+  color: var(--ink);
+}
+
+.order-form select {
+  min-height: 46px;
 }
 
 .order-total-row {
@@ -1081,10 +1143,28 @@ body.modal-open {
 
 #store-map {
   width: 100%;
-  height: 340px;
+  flex: 1 1 auto;
+  min-height: 320px;
+  height: 100%;
   border: 1px solid var(--line);
   background: var(--fog);
   z-index: 1;
+}
+
+.leaflet-control-attribution {
+  display: none !important;
+}
+
+.store-weather--compact {
+  margin-top: 0;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.store-weather--compact .weather-temp {
+  color: var(--felt);
+  font-weight: 800;
 }
 
 .store-marker {

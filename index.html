@@ -17,9 +17,9 @@
       </a>
       <nav class="nav" aria-label="Основное меню">
         <a class="active" href="index.html">Главная</a>
-        <a href="product.html">Каталог</a>
+        <a href="catalog.html">Каталог</a>
         <a href="contacts.html">Контакты</a>
-        <a href="db.html">БД</a>
+        <a href="db.html" class="nav-db" hidden>БД</a>
       </nav>
       <div class="auth-slot" id="auth-slot"></div>
     </div>
@@ -36,7 +36,7 @@
             клубов и дружеских посиделок. Подберём игру под настроение и число игроков.
           </p>
           <div class="cta-row">
-            <a class="btn btn-primary" href="product.html">Смотреть игру недели</a>
+            <a class="btn btn-primary" href="catalog.html">Смотреть каталог</a>
             <button type="button" class="btn btn-ghost" data-open-auth="register">Создать аккаунт</button>
           </div>
         </div>
@@ -58,34 +58,9 @@
           <h2>Популярные игры</h2>
           <p>Подборка для разных компаний — от спокойных семейных партий до весёлых вечеринок.</p>
         </div>
-        <div class="catalog">
-          <article class="game-card" data-reveal>
-            <img src="images/game4.jpg" alt="Каркассон">
-            <div class="game-card-body">
-              <h3>Каркассон</h3>
-              <p class="game-meta">2–5 игроков · 35–45 мин · 7+</p>
-              <p class="price">2 490 ₽</p>
-            </div>
-          </article>
-          <article class="game-card" data-reveal>
-            <img src="images/game3.jpg" alt="Тикет ту Райд">
-            <div class="game-card-body">
-              <h3>Ticket to Ride</h3>
-              <p class="game-meta">2–5 игроков · 45–60 мин · 8+</p>
-              <p class="price">3 290 ₽</p>
-            </div>
-          </article>
-          <article class="game-card" data-reveal>
-            <img src="images/game6.jpg" alt="Имаджинариум">
-            <div class="game-card-body">
-              <h3>Имаджинариум</h3>
-              <p class="game-meta">4–7 игроков · 30–40 мин · 12+</p>
-              <p class="price">1 890 ₽</p>
-            </div>
-          </article>
-        </div>
+        <div class="catalog" id="home-catalog"></div>
         <p style="margin-top: 1.5rem;" data-reveal>
-          <a class="btn btn-primary" href="product.html">Купить «Каркассон»</a>
+          <a class="btn btn-primary" href="catalog.html">Весь каталог</a>
         </p>
       </div>
     </section>
@@ -101,8 +76,8 @@
         </div>
         <div class="stats">
           <div class="stat">
-            <strong>420+</strong>
-            <span>наименований в каталоге</span>
+            <strong>11</strong>
+            <span>игр в каталоге</span>
           </div>
           <div class="stat">
             <strong>28</strong>
@@ -128,6 +103,25 @@
     </div>
   </footer>
 
+  <script src="js/games.js"></script>
   <script src="js/app.js"></script>
+  <script>
+    (function () {
+      const grid = document.getElementById("home-catalog");
+      if (!grid || !window.KUBIK_GAMES) return;
+      grid.innerHTML = window.KUBIK_GAMES.slice(0, 3).map(function (g) {
+        return (
+          '<a class="game-card game-card--link" href="product.html?id=' + g.id + '" data-reveal>' +
+            '<img src="' + g.image + '" alt="' + g.short + '">' +
+            '<div class="game-card-body">' +
+              "<h3>" + g.short + "</h3>" +
+              '<p class="game-meta">' + g.players + " игроков · " + g.time + " · " + g.age + "</p>" +
+              '<p class="price">' + g.price.toLocaleString("ru-RU") + " ₽</p>" +
+            "</div>" +
+          "</a>"
+        );
+      }).join("");
+    })();
+  </script>
 </body>
 </html>

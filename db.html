@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>База данных — Кубик &amp; Ко (ПР №3)</title>
+  <title>База данных — Кубик &amp; Ко</title>
   <link rel="stylesheet" href="Style.css">
   <link rel="icon" href="images/logo.jpg" type="image/jpeg">
   <style>
@@ -16,6 +16,7 @@
     table.db-table th { background: var(--felt); color: var(--white); }
     table.db-table tr:nth-child(even) { background: var(--paper); }
     .db-empty { color: var(--muted); font-style: italic; }
+    .db-lock { max-width: 520px; margin: 2rem auto; background: var(--white); border: 1px solid var(--line); padding: 1.5rem; }
   </style>
 </head>
 <body>
@@ -27,9 +28,9 @@
       </a>
       <nav class="nav" aria-label="Основное меню">
         <a href="index.html">Главная</a>
-        <a href="product.html">Каталог</a>
+        <a href="catalog.html">Каталог</a>
         <a href="contacts.html">Контакты</a>
-        <a class="active" href="db.html">БД</a>
+        <a class="active nav-db" href="db.html" hidden>БД</a>
       </nav>
       <div class="auth-slot" id="auth-slot"></div>
     </div>
@@ -38,13 +39,21 @@
   <main>
     <section class="page-hero">
       <div class="container">
-        <p class="breadcrumb"><a href="index.html">Главная</a> · ПР №3 · База данных</p>
+        <p class="breadcrumb"><a href="index.html">Главная</a> · База данных</p>
         <h1>Структура SQLite</h1>
-        <p class="db-meta" id="db-status">Загрузка статуса БД…</p>
+        <p class="db-meta" id="db-status">Проверка доступа…</p>
       </div>
     </section>
 
-    <section class="container db-grid">
+    <section class="container" id="db-locked" hidden>
+      <div class="db-lock">
+        <h2>Доступ только для администратора</h2>
+        <p class="db-meta">Войдите как Admin (пароль 123456), чтобы просматривать таблицы.</p>
+        <button type="button" class="btn btn-primary" data-open-auth="login">Войти</button>
+      </div>
+    </section>
+
+    <section class="container db-grid" id="db-content" hidden>
       <div class="db-panel">
         <h2>Таблица users</h2>
         <p class="db-meta">Данные форм регистрации и авторизации</p>
@@ -60,7 +69,7 @@
 
   <footer class="site-footer">
     <div class="container footer-inner">
-      <p>© 2026 Кубик &amp; Ко · Вариант 28 · ПР №3</p>
+      <p>© 2026 Кубик &amp; Ко</p>
       <p>СУБД: SQLite · 2 таблицы</p>
     </div>
   </footer>
@@ -72,7 +81,7 @@
         window.location.protocol === "file:" ? "http://127.0.0.1:5000" : "";
 
       function tableHTML(headers, rows) {
-        if (!rows.length) return '<p class="db-empty">Пока пусто — зарегистрируйтесь или оформите заказ</p>';
+        if (!rows.length) return '<p class="db-empty">Пока пусто</p>';
         let html = "<table class='db-table'><thead><tr>";
         headers.forEach((h) => { html += "<th>" + h + "</th>"; });
         html += "</tr></thead><tbody>";
@@ -88,27 +97,65 @@
         return html;
       }
 
-      try {
-        const status = await fetch(API + "/api/db-status").then((r) => r.json());
-        document.getElementById("db-status").textContent =
-          "СУБД: " + status.db + " · таблицы: " + status.tables.join(", ") +
-          " · пользователей: " + status.users + " · заказов: " + status.orders;
-
-        const users = await fetch(API + "/api/users").then((r) => r.json());
-        document.getElementById("users-table").innerHTML = tableHTML(
-          ["id", "name", "email", "created_at"],
-          users.users || []
-        );
-
-        const orders = await fetch(API + "/api/orders").then((r) => r.json());
-        document.getElementById("orders-table").innerHTML = tableHTML(
-          ["id", "user_id", "user_email", "product", "qty", "total", "customer", "phone", "delivery", "created_at"],
-          orders.orders || []
-        );
-      } catch (e) {
-        document.getElementById("db-status").textContent =
-          "Сервер не запущен. В терминале: python3 server.py";
+      function isAdminSession() {
+        try {
+          const s = JSON.parse(localStorage.getItem("kubik_session") || "null");
+          return !!(s && (s.is_admin === 1 || s.is_admin === true || s.name === "Admin"));
+        } catch {
+          return false;
+        }
       }
+
+      async function loadDb() {
+        const locked = document.getElementById("db-locked");
+        const content = document.getElementById("db-content");
+        const status = document.getElementById("db-status");
+
+        if (!isAdminSession()) {
+          locked.hidden = false;
+          content.hidden = true;
+          status.textContent = "Раздел доступен только администратору сайта.";
+          return;
+        }
+
+        locked.hidden = true;
+        content.hidden = false;
+
+        try {
+          const st = await fetch(API + "/api/db-status").then((r) => r.json());
+          status.textContent =
+            "СУБД: " + st.db + " · таблицы: " + st.tables.join(", ") +
+            " · пользователей: " + st.users + " · заказов: " + st.orders;
+
+          const users = await fetch(API + "/api/users").then((r) => r.json());
+          document.getElementById("users-table").innerHTML = tableHTML(
+            ["id", "name", "email", "is_admin", "created_at"],
+            users.users || []
+          );
+
+          const orders = await fetch(API + "/api/orders").then((r) => r.json());
+          document.getElementById("orders-table").innerHTML = tableHTML(
+            ["id", "user_id", "user_email", "product", "qty", "total", "customer", "phone", "delivery", "created_at"],
+            orders.orders || []
+          );
+        } catch (e) {
+          status.textContent = "Сервер не запущен. В терминале: python3 server.py";
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", loadDb);
+      window.addEventListener("storage", loadDb);
+      // after login in same tab
+      const _setItem = localStorage.setItem.bind(localStorage);
+      localStorage.setItem = function (k, v) {
+        _setItem(k, v);
+        if (k === "kubik_session") setTimeout(loadDb, 50);
+      };
+      const _remove = localStorage.removeItem.bind(localStorage);
+      localStorage.removeItem = function (k) {
+        _remove(k);
+        if (k === "kubik_session") setTimeout(loadDb, 50);
+      };
     })();
   </script>
 </body>

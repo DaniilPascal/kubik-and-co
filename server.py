@@ -46,6 +46,29 @@ def init_db():
     conn = sqlite3.connect(DB_PATH)
     try:
         conn.executescript(schema)
+        # миграция для старых БД без is_admin
+        cols = [r[1] for r in conn.execute("PRAGMA table_info(users)").fetchall()]
+        if "is_admin" not in cols:
+            conn.execute(
+                "ALTER TABLE users ADD COLUMN is_admin INTEGER NOT NULL DEFAULT 0"
+            )
+        # тестовый администратор: Admin / 123456
+        admin_email = "admin@kubik.ru"
+        admin_pass = hash_password("123456")
+        existing = conn.execute(
+            "SELECT id FROM users WHERE email = ? OR name = ?",
+            (admin_email, "Admin"),
+        ).fetchone()
+        if existing:
+            conn.execute(
+                "UPDATE users SET name = ?, password = ?, is_admin = 1 WHERE id = ?",
+                ("Admin", admin_pass, existing[0]),
+            )
+        else:
+            conn.execute(
+                "INSERT INTO users (name, email, password, is_admin) VALUES (?, ?, ?, 1)",
+                ("Admin", admin_email, admin_pass),
+            )
         conn.commit()
     finally:
         conn.close()
@@ -60,6 +83,7 @@ def user_to_dict(row):
         "id": row["id"],
         "name": row["name"],
         "email": row["email"],
+        "is_admin": int(row["is_admin"]) if "is_admin" in row.keys() else 0,
         "created_at": row["created_at"],
     }
 
@@ -88,7 +112,7 @@ def register():
     if "@" not in email or "." not in email:
         return jsonify({"ok": False, "error": "Введите корректный email"}), 400
     if len(password) < 4:
-        return jsonify({"ok": False, "error": "Пароль не короче 4 символов"}), 400
+        return jsonify({"ok": False, "error": "Пароль короче 4 символов"}), 400
 
     db = get_db()
     try:
@@ -107,15 +131,19 @@ def register():
 @app.post("/api/login")
 def login():
     data = request.get_json(silent=True) or {}
-    email = (data.get("email") or "").strip().lower()
+    login = (data.get("email") or "").strip()
     password = data.get("password") or ""
 
-    if not email or not password:
+    if not login or not password:
         return jsonify({"ok": False, "error": "Заполните email и пароль"}), 400
 
+    login_l = login.lower()
     row = get_db().execute(
-        "SELECT * FROM users WHERE email = ? AND password = ?",
-        (email, hash_password(password)),
+        """
+        SELECT * FROM users
+        WHERE (lower(email) = ? OR lower(name) = ?) AND password = ?
+        """,
+        (login_l, login_l, hash_password(password)),
     ).fetchone()
 
     if not row:
@@ -137,7 +165,7 @@ def get_user(user_id):
 @app.get("/api/users")
 def list_users():
     rows = get_db().execute(
-        "SELECT id, name, email, created_at FROM users ORDER BY id"
+        "SELECT id, name, email, is_admin, created_at FROM users ORDER BY id"
     ).fetchall()
     return jsonify({"ok": True, "users": [dict(r) for r in rows]})
 

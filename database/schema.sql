@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
     name       TEXT    NOT NULL,
     email      TEXT    NOT NULL UNIQUE,
     password   TEXT    NOT NULL,
+    is_admin   INTEGER NOT NULL DEFAULT 0,
     created_at TEXT    NOT NULL DEFAULT (datetime('now', 'localtime'))
 );
 

@@ -37,12 +37,28 @@
     if (user) {
       localStorage.setItem(
         STORAGE_SESSION,
-        JSON.stringify({ id: user.id, email: user.email, name: user.name })
+        JSON.stringify({
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          is_admin: user.is_admin ? 1 : 0,
+        })
       );
     } else {
       localStorage.removeItem(STORAGE_SESSION);
     }
     updateAuthUI();
+  }
+
+  function isAdmin() {
+    const s = getSession();
+    return !!(s && (s.is_admin === 1 || s.is_admin === true || s.name === "Admin"));
+  }
+
+  function updateDbNav() {
+    document.querySelectorAll(".nav-db").forEach((el) => {
+      el.hidden = !isAdmin();
+    });
   }
 
   function toast(message, type) {
@@ -77,6 +93,7 @@
       document.getElementById("btn-logout")?.addEventListener("click", () => {
         setSession(null);
         toast("Вы вышли из аккаунта", "info");
+        if (location.pathname.endsWith("db.html")) location.reload();
       });
     } else {
       slot.innerHTML =
@@ -85,6 +102,7 @@
         openAuthModal("login")
       );
     }
+    updateDbNav();
   }
 
   function escapeHtml(str) {
@@ -105,7 +123,6 @@
     modal.innerHTML = `
       <div class="modal__backdrop" data-close-modal></div>
       <div class="modal__dialog" role="dialog" aria-labelledby="auth-title" aria-modal="true">
-        <button type="button" class="modal__close" data-close-modal aria-label="Закрыть">×</button>
         <div class="auth-tabs">
           <button type="button" class="auth-tab is-active" data-tab="login">Вход</button>
           <button type="button" class="auth-tab" data-tab="register">Регистрация</button>
@@ -113,9 +130,9 @@
 
         <form id="form-login" class="auth-form is-active" novalidate>
           <h2 id="auth-title">Вход в аккаунт</h2>
-          <p class="form-db-hint">Данные проверяются в SQLite (таблица users)</p>
-          <label>Email
-            <input type="email" name="email" required placeholder="you@mail.ru" autocomplete="email">
+          <p class="form-db-hint">Данные проверяются в SQLite (таблица users). Админ: Admin / 123456</p>
+          <label>Email или имя
+            <input type="text" name="email" required placeholder="you@mail.ru или Admin" autocomplete="username">
           </label>
           <label>Пароль
             <input type="password" name="password" required minlength="4" placeholder="••••••••" autocomplete="current-password">
@@ -234,6 +251,7 @@
       setSession(data.user);
       closeAuthModal();
       toast("Вход из БД: " + data.user.name, "success");
+      if (location.pathname.endsWith("db.html")) location.reload();
     } catch (err) {
       showFormError(
         form,
@@ -263,7 +281,7 @@
       return;
     }
     if (password.length < 4) {
-      showFormError(form, "Пароль не короче 4 символов");
+      showFormError(form, "Пароль короче 4 символов");
       return;
     }
     if (password !== password2) {

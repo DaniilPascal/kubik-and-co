@@ -1,6 +1,5 @@
 /**
  * ПР №2 — API карты магазина (Leaflet + OpenStreetMap)
- * Координаты: учебная точка у ст. м. Василеостровская, СПб
  */
 (function () {
   "use strict";
@@ -12,18 +11,29 @@
     address: "ул. Игровая, д. 28",
   };
 
+  function syncMapHeight() {
+    const mapEl = document.getElementById("store-map");
+    const panel = document.getElementById("contact-panel");
+    if (!mapEl || !panel) return;
+    const h = Math.max(panel.offsetHeight - 48, 280);
+    mapEl.style.height = h + "px";
+  }
+
   function initMap() {
     const el = document.getElementById("store-map");
     if (!el || typeof L === "undefined") return;
 
+    syncMapHeight();
+
     const map = L.map(el, {
       scrollWheelZoom: false,
       zoomControl: true,
+      attributionControl: false,
     }).setView([STORE.lat, STORE.lng], 15);
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 19,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      attribution: "",
     }).addTo(map);
 
     const icon = L.divIcon({
@@ -44,10 +54,17 @@
       )
       .openPopup();
 
-    setTimeout(() => map.invalidateSize(), 200);
+    setTimeout(() => {
+      syncMapHeight();
+      map.invalidateSize();
+    }, 200);
+
+    window.addEventListener("resize", () => {
+      syncMapHeight();
+      map.invalidateSize();
+    });
   }
 
-  /** Доп. API: погода у магазина (Open-Meteo, без ключа) */
   async function loadWeather() {
     const box = document.getElementById("store-weather");
     if (!box) return;
@@ -66,25 +83,25 @@
       const code = data.current?.weather_code;
       const hint = weatherHint(code);
       box.innerHTML =
-        "<strong>Сейчас у магазина:</strong> " +
+        "<span class='weather-temp'>" +
         (t != null ? Math.round(t) + " °C" : "—") +
-        ". " +
+        "</span> · " +
         hint;
       box.hidden = false;
     } catch (err) {
-      box.textContent = "Не удалось загрузить погоду (API Open-Meteo).";
+      box.textContent = "Погода временно недоступна";
       box.hidden = false;
       console.warn(err);
     }
   }
 
   function weatherHint(code) {
-    if (code == null) return "Отличный повод для партии в настолки.";
-    if (code === 0) return "Ясно — идеально дойти до игротеки пешком.";
-    if (code <= 3) return "Переменная облачность — самое время занять стол.";
-    if (code >= 51 && code <= 67) return "Дождик снаружи — тёплые миплы внутри.";
-    if (code >= 71) return "Снег? Берите какао и «Каркассон».";
-    return "Хороший вечер для настольной игры.";
+    if (code == null) return "время для настолок";
+    if (code === 0) return "ясно";
+    if (code <= 3) return "облачно — самое время за стол";
+    if (code >= 51 && code <= 67) return "дождь — играйте внутри";
+    if (code >= 71) return "снег — берите какао";
+    return "хороший вечер для игры";
   }
 
   document.addEventListener("DOMContentLoaded", () => {

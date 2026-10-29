@@ -18,9 +18,9 @@
       </a>
       <nav class="nav" aria-label="Основное меню">
         <a href="index.html">Главная</a>
-        <a href="product.html">Каталог</a>
+        <a href="catalog.html">Каталог</a>
         <a class="active" href="contacts.html">Контакты</a>
-        <a href="db.html">БД</a>
+        <a href="db.html" class="nav-db" hidden>БД</a>
       </nav>
       <div class="auth-slot" id="auth-slot"></div>
     </div>
@@ -37,7 +37,7 @@
     </section>
 
     <section class="container contacts-grid">
-      <div class="contact-card" data-reveal>
+      <div class="contact-card" data-reveal id="contact-panel">
         <h2>Магазин и игротека</h2>
         <p class="slogan">«Собери стол — собери компанию»</p>
         <p style="color: var(--muted); margin-bottom: 1rem;">
@@ -72,17 +72,16 @@
         </div>
       </div>
 
-      <div data-reveal>
-        <!-- API: интерактивная карта OpenStreetMap через Leaflet -->
+      <div class="map-col" data-reveal>
         <div id="store-map" role="region" aria-label="Карта магазина"></div>
-        <p id="store-weather" class="store-weather" hidden></p>
+        <p id="store-weather" class="store-weather store-weather--compact" hidden></p>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
     <div class="container footer-inner">
-      <p>© 2026 Кубик &amp; Ко · Вариант 28 · ПР №2</p>
+      <p>© 2026 Кубик &amp; Ко</p>
       <p>Слоган: Собери стол — собери компанию</p>
     </div>
   </footer>
